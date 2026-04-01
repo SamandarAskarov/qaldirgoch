@@ -1,0 +1,521 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --teal:#074454;--mint:#deaf7f;--teal2:#0a5a6e;--teal3:#0d7090;
+    --mint2:#e8c99a;--mint3:#f5e8ce;--dark:#031e27;--darker:#020f15;
+    --text-light:rgba(222,175,127,0.7);--text-dim:rgba(222,175,127,0.4)
+  }
+  body{font-family:'Jost',sans-serif;background:var(--dark);color:var(--mint3);overflow-x:hidden}
+
+  /* LANG SWITCHER */
+  .lang-bar{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:flex-end;padding:0.5rem 2rem;background:var(--darker);border-bottom:1px solid rgba(222,175,127,0.1)}
+  .lang-btn{background:none;border:1px solid rgba(222,175,127,0.2);color:var(--mint3);padding:0.25rem 0.75rem;border-radius:20px;font-size:0.72rem;letter-spacing:2px;cursor:pointer;margin-left:0.5rem;font-family:'Jost',sans-serif;transition:all 0.3s}
+  .lang-btn.active,.lang-btn:hover{background:var(--mint);color:var(--teal);border-color:var(--mint);font-weight:500}
+
+  /* NAV */
+  nav{position:fixed;top:32px;left:0;right:0;z-index:100;padding:1rem 2.5rem;display:flex;justify-content:space-between;align-items:center;background:rgba(3,30,39,0.9);backdrop-filter:blur(16px);border-bottom:1px solid rgba(222,175,127,0.12)}
+  .nav-logo{display:flex;align-items:center;gap:0.75rem}
+  .nav-logo-text{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--mint);letter-spacing:3px}
+  .nav-links{display:flex;gap:2rem}
+  .nav-links a{color:var(--mint3);text-decoration:none;font-size:0.78rem;letter-spacing:2px;opacity:0.6;transition:all 0.3s;text-transform:uppercase}
+  .nav-links a:hover{color:var(--mint);opacity:1}
+  .open-pill{background:rgba(222,175,127,0.12);border:1px solid rgba(222,175,127,0.3);color:var(--mint);padding:0.35rem 1rem;border-radius:20px;font-size:0.7rem;letter-spacing:2px}
+
+  /* SWALLOW SVG in nav */
+  .nav-bird{width:32px;height:32px}
+
+  /* HERO */
+  .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;text-align:center;padding:8rem 2rem 5rem;overflow:hidden}
+  .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 20% 60%,rgba(7,68,84,0.6) 0%,transparent 55%),radial-gradient(ellipse at 80% 30%,rgba(222,175,127,0.08) 0%,transparent 45%),linear-gradient(180deg,var(--darker) 0%,var(--dark) 100%)}
+  .teal-blob{position:absolute;width:500px;height:500px;background:rgba(7,68,84,0.25);border-radius:50%;filter:blur(80px);top:10%;right:-10%;pointer-events:none}
+  .teal-blob2{position:absolute;width:300px;height:300px;background:rgba(222,175,127,0.06);border-radius:50%;filter:blur(60px);bottom:10%;left:5%;pointer-events:none}
+  .hero-content{position:relative;z-index:1;max-width:800px}
+  .hero-bird{width:120px;height:120px;margin:0 auto 2rem;opacity:0;animation:fadeUp 1s ease 0.2s forwards}
+  .hero-eyebrow{font-size:0.72rem;letter-spacing:5px;color:var(--mint);text-transform:uppercase;margin-bottom:1.5rem;opacity:0;animation:fadeUp 1s ease 0.4s forwards}
+  .hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,9vw,6.5rem);line-height:1;margin-bottom:1.5rem;opacity:0;animation:fadeUp 1s ease 0.6s forwards;color:var(--mint3)}
+  .hero-title em{font-style:italic;color:var(--mint)}
+  .hero-sub{font-size:1rem;color:var(--text-light);max-width:500px;margin:0 auto 2.5rem;line-height:1.8;opacity:0;animation:fadeUp 1s ease 0.8s forwards;font-weight:300}
+  .hero-stars{display:flex;align-items:center;justify-content:center;gap:0.25rem;margin-bottom:2.5rem;opacity:0;animation:fadeUp 1s ease 1s forwards}
+  .star{color:var(--mint);font-size:1.1rem}
+  .hero-rating{margin-left:0.75rem;font-size:0.85rem;color:var(--text-light)}
+  .hero-cta{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;opacity:0;animation:fadeUp 1s ease 1.2s forwards}
+  .btn-primary{background:var(--mint);color:var(--teal);padding:0.9rem 2.5rem;border-radius:30px;text-decoration:none;font-weight:500;font-size:0.85rem;letter-spacing:2px;transition:all 0.3s;text-transform:uppercase}
+  .btn-primary:hover{background:var(--mint2);transform:translateY(-2px)}
+  .btn-outline{border:1px solid rgba(222,175,127,0.35);color:var(--mint);padding:0.9rem 2.5rem;border-radius:30px;text-decoration:none;font-size:0.85rem;letter-spacing:2px;transition:all 0.3s;text-transform:uppercase}
+  .btn-outline:hover{border-color:var(--mint);background:rgba(222,175,127,0.08)}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+  /* FEATURES */
+  .features-bar{background:var(--teal);padding:1.1rem 2rem;display:flex;justify-content:center;gap:3rem;flex-wrap:wrap;border-top:1px solid rgba(222,175,127,0.2);border-bottom:1px solid rgba(222,175,127,0.2)}
+  .feature-item{display:flex;align-items:center;gap:0.6rem;font-size:0.75rem;letter-spacing:2px;text-transform:uppercase;color:var(--mint2)}
+
+  /* SECTIONS */
+  section{padding:6rem 2rem}
+  .section-label{font-size:0.68rem;letter-spacing:5px;color:var(--mint);text-transform:uppercase;margin-bottom:0.75rem}
+  .section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,5vw,3.2rem);margin-bottom:1rem;line-height:1.15;color:var(--mint3)}
+  .section-title em{font-style:italic;color:var(--mint)}
+  .divider{width:50px;height:1px;background:var(--mint);opacity:0.5;margin:1.5rem 0}
+
+  /* ABOUT */
+  .about{background:var(--darker)}
+  .about-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+  .about-visual{position:relative}
+  .big-card{background:linear-gradient(135deg,rgba(7,68,84,0.6),rgba(7,68,84,0.2));border:1px solid rgba(222,175,127,0.2);border-radius:20px;padding:3rem;text-align:center;position:relative;overflow:hidden}
+  .big-card-bird{position:absolute;top:-20px;right:-20px;opacity:0.08;width:200px;height:200px}
+  .big-num{font-family:'Cormorant Garamond',serif;font-size:5.5rem;color:var(--mint);line-height:1}
+  .big-lbl{font-size:0.7rem;letter-spacing:4px;text-transform:uppercase;color:var(--text-dim);margin-top:0.5rem}
+  .stat-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.5rem}
+  .sbox{background:rgba(222,175,127,0.06);border:1px solid rgba(222,175,127,0.12);border-radius:12px;padding:1rem;text-align:center}
+  .sval{font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--mint)}
+  .slbl{font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);margin-top:0.25rem}
+  .about-text p{color:var(--text-light);line-height:1.85;margin-bottom:1rem;font-size:0.92rem;font-weight:300}
+  .badge-row{display:flex;gap:0.6rem;flex-wrap:wrap;margin-top:1.5rem}
+  .badge{background:rgba(7,68,84,0.5);border:1px solid rgba(222,175,127,0.2);color:var(--mint2);padding:0.35rem 0.9rem;border-radius:20px;font-size:0.72rem;letter-spacing:1px}
+
+  /* MENU */
+  .menu-sec{background:var(--dark)}
+  .menu-hdr{text-align:center;max-width:600px;margin:0 auto 4rem}
+  .menu-hdr .divider{margin:1.5rem auto}
+  .menu-grid{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.25rem}
+  .mcard{background:rgba(7,68,84,0.2);border:1px solid rgba(222,175,127,0.12);border-radius:16px;padding:1.5rem;transition:all 0.3s;position:relative;overflow:hidden}
+  .mcard:hover{border-color:rgba(222,175,127,0.35);background:rgba(7,68,84,0.35);transform:translateY(-3px)}
+  .mcard-tag{display:inline-block;background:rgba(7,68,84,0.6);color:var(--mint);border:1px solid rgba(222,175,127,0.2);font-size:0.62rem;letter-spacing:2px;text-transform:uppercase;padding:0.2rem 0.6rem;border-radius:10px;margin-bottom:1rem}
+  .mcard-icon{font-size:1.8rem;margin-bottom:0.75rem;display:block}
+  .mcard-name{font-family:'Cormorant Garamond',serif;font-size:1.25rem;margin-bottom:0.5rem;color:var(--mint3)}
+  .mcard-desc{font-size:0.8rem;color:var(--text-light);line-height:1.65;margin-bottom:1rem;font-weight:300}
+  .mcard-price{font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:var(--mint)}
+  .bird-watermark{position:absolute;bottom:-15px;right:-15px;opacity:0.04;width:100px;height:100px}
+
+  /* STORY SECTION — decorative bird showcase */
+  .story{background:var(--teal);padding:5rem 2rem;text-align:center;position:relative;overflow:hidden}
+  .story-bird-bg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0.06;width:600px;height:600px}
+  .story-inner{position:relative;z-index:1;max-width:700px;margin:0 auto}
+  .story-quote{font-family:'Cormorant Garamond',serif;font-size:clamp(1.5rem,4vw,2.5rem);font-style:italic;color:var(--mint3);line-height:1.5;margin-bottom:2rem}
+  .story-birds-row{display:flex;justify-content:center;gap:1.5rem;margin:2rem 0}
+
+  /* REVIEWS */
+  .reviews{background:var(--darker)}
+  .rev-hdr{text-align:center;max-width:600px;margin:0 auto 4rem}
+  .rev-hdr .divider{margin:1.5rem auto}
+  .rev-grid{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.25rem}
+  .rcard{background:rgba(7,68,84,0.15);border:1px solid rgba(222,175,127,0.1);border-radius:16px;padding:1.5rem;position:relative}
+  .rcard-bird{position:absolute;top:1rem;right:1rem;opacity:0.12;width:30px;height:30px}
+  .rcard-stars{color:var(--mint);font-size:0.85rem;margin-bottom:1rem}
+  .rcard-text{font-size:0.88rem;color:var(--text-light);line-height:1.75;margin-bottom:1.25rem;font-style:italic;font-weight:300}
+  .rcard-author{display:flex;align-items:center;gap:0.75rem}
+  .rcard-av{width:36px;height:36px;border-radius:50%;background:var(--teal);border:1px solid rgba(222,175,127,0.3);display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:500;color:var(--mint)}
+  .rcard-name{font-size:0.83rem;font-weight:500;color:var(--mint3)}
+  .rcard-date{font-size:0.72rem;color:var(--text-dim)}
+
+  /* INFO */
+  .info-sec{background:var(--dark);border-top:1px solid rgba(222,175,127,0.1)}
+  .info-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:3rem}
+  .iblock h3{font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:var(--mint);margin-bottom:1rem}
+  .iblock p,.iblock a{font-size:0.87rem;color:var(--text-light);line-height:1.85;text-decoration:none;font-weight:300}
+  .iblock a:hover{color:var(--mint)}
+  .green-pill{display:inline-block;background:rgba(10,90,70,0.3);border:1px solid rgba(100,200,150,0.3);color:#7de8b0;padding:0.25rem 0.75rem;border-radius:10px;font-size:0.7rem;letter-spacing:1px;margin-top:0.5rem}
+
+  /* FOOTER */
+  footer{background:var(--darker);padding:2rem;text-align:center;border-top:1px solid rgba(222,175,127,0.08);display:flex;flex-direction:column;align-items:center;gap:1rem}
+  .footer-bird{width:40px;height:40px;opacity:0.4}
+  footer p{font-size:0.75rem;color:var(--text-dim);letter-spacing:2px}
+  footer span{color:var(--mint)}
+
+  @media(max-width:700px){
+    .about-inner{grid-template-columns:1fr}
+    .nav-links{display:none}
+    .hero-bird{width:80px;height:80px}
+  }
+</style>
+
+<!-- LANG DATA -->
+<script>
+const T = {
+  uz:{
+    nav:['Biz haqimizda','Menyu','Sharhlar','Aloqa'],
+    open:'24/7 Ochiq',
+    eyebrow:"Toshkent — Ko'kcha Darvoza ko'chasi, 349A",
+    h1:"Milliy ta'm,",h1em:"qalbga yaqin",
+    sub:"Oilaviy an'analar va zamonaviy qulay muhit — Qaldirg'och oilaviy restoran",
+    ratings:"269 ta baho",
+    btn1:"Menyuni ko'rish",btn2:"Qo'ng'iroq",
+    f1:"24 soat ochiq",f2:"Yetkazib berish",f3:"O'yin maydoni",f4:"Oilaviy muhit",
+    about_label:"Biz haqimizda",about_title:"Uy iliqligini ",about_em:"his eting",
+    about_p1:"Qaldirg'och — bu faqat restoran emas. Bu milliy mazzali taomlar, mehribon xizmat va bolalar uchun bepul o'yin maydoni bor, qulay oilaviy muhit.",
+    about_p2:"Toshkentning markazida joylashgan bo'lib, kechasi ham, kunduz ham eshiklarimiz sizga ochiq. Har bir taom yangi mahsulotlardan, an'anaviy retseptlar asosida tayyorlanadi.",
+    badges:["Milliy taomlar","Evropa taomlari","Yetkazib berish","Oilaviy muhit"],
+    stat_lbl:["Baho","Sharh","Ochiq","Taom"],
+    menu_label:"Menyumiz",menu_title:"Mashhur ",menu_em:"taomlar",
+    dishes:[
+      {tag:"Asosiy taom",name:"Qovurilgan lag'mon",desc:"Mol go'shti va sabzavotli lag'mon — qo'ng'ir qalampir, pomidor, selderey. Ustida ko'k piyoz.",price:"65 000 so'm"},
+      {tag:"Asosiy taom",name:"Uyg'ur lag'moni",desc:"Mol go'shti va sabzavotli uyg'ur lag'moni — qo'ng'ir qalampir, selderey va pomidor bilan.",price:"62 000 so'm"},
+      {tag:"Birinchi taom",name:"Mastava",desc:"Mol va qo'y go'shtli qalin mastava — piyoz, sabzi, pomidor, sarimsoq va ko'kat bilan.",price:"45 000 so'm"},
+      {tag:"Milliy taom",name:"Samarqand zig'ir oshi",desc:"Mol go'shti, sabzi va kunjut moyi bilan pishirilgan osh. Guruch yaxshi bug'langan.",price:"62 000 so'm"},
+      {tag:"Salat",name:"Achachuk",desc:"Yangi pomidor va piyozdan tayyorlangan yengil, xushbo'y salat.",price:"20 000 so'm"},
+      {tag:"Milliy taom",name:"Naryn",desc:"An'anaviy naryn — xushbo'y piyoz bilan. To'yimli va maroqli ta'm.",price:"57 000 so'm"},
+    ],
+    story_q:"\"Qaldirg'och qanday erkin uchsa — bizning taomlar ham shunday erkin, tabiiy va iliq\"",
+    rev_label:"Mehmonlar fikri",rev_title:"Ular nima ",rev_em:"deydi?",
+    reviews:[
+      {text:"Mazali milliy va Evropa taomlari, yuqori darajadagi xizmat. Samimiy xodimlar, uy kabi toza muhit. 7/24 ochiq.",name:"Sardor Omon",date:"Yanvar 2025"},
+      {text:"Kabobi juda yoqdi — yangi va yumshoq. Xodimlar jilmayib tez xizmat ko'rsatdi. Joy toza va qulay.",name:"Saidjon Abduvaliev",date:"Noyabr 2025"},
+      {text:"Sigir bo'yni, milliy shashlik va burger yedik — hammasi zo'r. Atmosfera va narxlar ham juda yaxshi.",name:"Behruz Samadov",date:"Yanvar 2025"},
+    ],
+    info_addr:"Manzil",info_time:"Ish vaqti",info_contact:"Bog'lanish",info_services:"Xizmatlar",
+    addr_text:"Toshkent shahar,<br>Ko'kcha Darvoza ko'chasi, 349A",
+    time_text:"Har kuni, to'xtovsiz",
+    services:"🚚 Yetkazib berish<br>🛍️ Olib ketish<br>🎠 Bepul o'yin maydoni<br>🅿️ Avtoturargoh",
+    open_now:"HOZIR OCHIQ",
+    foot:"Qaldirg'och oilaviy restoran · Toshkent · 24/7"
+  },
+  ru:{
+    nav:['О нас','Меню','Отзывы','Контакты'],
+    open:'Открыто 24/7',
+    eyebrow:"Ташкент — ул. Кукча Дарвоза, 349A",
+    h1:"Национальный вкус,",h1em:"близкий сердцу",
+    sub:"Семейные традиции и современный уютный интерьер — семейный ресторан Qaldirg'och",
+    ratings:"269 оценок",
+    btn1:"Смотреть меню",btn2:"Позвонить",
+    f1:"Открыто 24 часа",f2:"Доставка",f3:"Детская площадка",f4:"Семейная атмосфера",
+    about_label:"О нас",about_title:"Почувствуйте ",about_em:"домашнее тепло",
+    about_p1:"Qaldirg'och — это не просто ресторан. Это место, где готовят вкуснейшие национальные блюда, где приветливый персонал и бесплатная детская площадка.",
+    about_p2:"Расположен в центре Ташкента и открыт круглосуточно. Каждое блюдо готовится из свежих продуктов по традиционным рецептам.",
+    badges:["Национальные блюда","Европейская кухня","Доставка","Семейный ресторан"],
+    stat_lbl:["Оценок","Отзывов","Открыт","Блюд"],
+    menu_label:"Наше меню",menu_title:"Популярные ",menu_em:"блюда",
+    dishes:[
+      {tag:"Основное",name:"Жареный лагман",desc:"Лагман с говядиной и овощами — болгарский перец, помидоры, сельдерей. Сверху зелёный лук.",price:"65 000 сум"},
+      {tag:"Основное",name:"Уйгурский лагман",desc:"Уйгурский лагман с говядиной и овощами — болгарский перец, сельдерей и помидоры.",price:"62 000 сум"},
+      {tag:"Первое блюдо",name:"Мастава",desc:"Густая мастава с говядиной и бараниной — лук, морковь, помидоры, чеснок и зелень.",price:"45 000 сум"},
+      {tag:"Национальное",name:"Самаркандский плов",desc:"Плов с говядиной, морковью и кунжутным маслом. Рис хорошо пропарен, мясо мягкое.",price:"62 000 сум"},
+      {tag:"Салат",name:"Ачичук",desc:"Свежий салат из помидоров и лука. Лёгкий, ароматный, освежающий.",price:"20 000 сум"},
+      {tag:"Национальное",name:"Нарын",desc:"Традиционный нарын с ароматным луком. Сытный и вкусный.",price:"57 000 сум"},
+    ],
+    story_q:"«Как ласточка летит свободно — так и наши блюда: свободные, природные и тёплые»",
+    rev_label:"Отзывы гостей",rev_title:"Что говорят ",rev_em:"наши гости?",
+    reviews:[
+      {text:"Вкусные национальные и европейские блюда, обслуживание на высшем уровне. Приветливый персонал, чисто как дома. Работают 7/24.",name:"Сардор Омон",date:"Январь 2025"},
+      {text:"Шашлык очень понравился — свежий и мягкий. Персонал улыбается, обслуживание быстрое. Место чистое и уютное.",name:"Саидджон Абдуваллиев",date:"Ноябрь 2025"},
+      {text:"Ели говяжью шейку, шашлык и бургер — всё отлично. Атмосфера, интерьер и цены тоже порадовали.",name:"Бехруз Самадов",date:"Январь 2025"},
+    ],
+    info_addr:"Адрес",info_time:"Режим работы",info_contact:"Контакты",info_services:"Услуги",
+    addr_text:"г. Ташкент,<br>ул. Кукча Дарвоза, 349A",
+    time_text:"Ежедневно, круглосуточно",
+    services:"🚚 Доставка<br>🛍️ Самовывоз<br>🎠 Бесплатная детская площадка<br>🅿️ Парковка",
+    open_now:"СЕЙЧАС ОТКРЫТО",
+    foot:"Семейный ресторан Qaldirg'och · Ташкент · 24/7"
+  },
+  en:{
+    nav:['About','Menu','Reviews','Contact'],
+    open:'Open 24/7',
+    eyebrow:"Tashkent — Kukcha Darvoza Street, 349A",
+    h1:"National flavors,",h1em:"close to heart",
+    sub:"Family traditions meet modern comfort — Qaldirg'och Family Restaurant",
+    ratings:"269 ratings",
+    btn1:"View Menu",btn2:"Call Us",
+    f1:"Open 24 hours",f2:"Delivery",f3:"Kids Playground",f4:"Family Friendly",
+    about_label:"About Us",about_title:"Feel the warmth ",about_em:"of home",
+    about_p1:"Qaldirg'och is more than a restaurant. It's a place of authentic national cuisine, warm hospitality, and a free kids' playground for the whole family.",
+    about_p2:"Located in the heart of Tashkent, open around the clock. Every dish is prepared fresh from traditional recipes passed down through generations.",
+    badges:["National Cuisine","European Dishes","Delivery","Family Restaurant"],
+    stat_lbl:["Ratings","Reviews","Open","Dishes"],
+    menu_label:"Our Menu",menu_title:"Signature ",menu_em:"dishes",
+    dishes:[
+      {tag:"Main Course",name:"Fried Lagman",desc:"Lagman with beef and vegetables — bell pepper, tomatoes, celery. Topped with spring onions.",price:"65 000 UZS"},
+      {tag:"Main Course",name:"Uyghur Lagman",desc:"Uyghur-style lagman with beef and vegetables — bell pepper, celery and tomatoes.",price:"62 000 UZS"},
+      {tag:"Soup",name:"Mastava",desc:"Rich mastava soup with beef and lamb — onion, carrot, tomatoes, garlic and herbs.",price:"45 000 UZS"},
+      {tag:"National",name:"Samarkand Pilaf",desc:"Pilaf with beef, carrots and sesame oil. Perfectly steamed rice with tender meat.",price:"62 000 UZS"},
+      {tag:"Salad",name:"Achichuk",desc:"Fresh salad of tomatoes and onions. Light, aromatic and refreshing.",price:"20 000 UZS"},
+      {tag:"National",name:"Naryn",desc:"Traditional naryn with fragrant onion. Hearty and full of character.",price:"57 000 UZS"},
+    ],
+    story_q:"\"Just as the swallow flies free — our dishes are free, natural and warm\"",
+    rev_label:"Guest Reviews",rev_title:"What our ",rev_em:"guests say",
+    reviews:[
+      {text:"Delicious national and European dishes, top-level service. Friendly staff, clean as home. Open 7/24.",name:"Sardor Omon",date:"January 2025"},
+      {text:"The kebab was amazing — fresh and tender. Staff served with smiles and speed. Place is clean and cozy.",name:"Saidjon Abduvaliev",date:"November 2025"},
+      {text:"We had beef neck, national shashlik and burger — all excellent. Great atmosphere, interiors and prices.",name:"Behruz Samadov",date:"January 2025"},
+    ],
+    info_addr:"Address",info_time:"Working Hours",info_contact:"Contact",info_services:"Services",
+    addr_text:"Tashkent city,<br>Kukcha Darvoza Street, 349A",
+    time_text:"Every day, around the clock",
+    services:"🚚 Delivery<br>🛍️ Takeaway<br>🎠 Free Kids Playground<br>🅿️ Parking",
+    open_now:"OPEN NOW",
+    foot:"Qaldirg'och Family Restaurant · Tashkent · 24/7"
+  }
+};
+
+let lang = 'uz';
+
+function swallowSVG(w,h,op){
+  op = op||1;
+  return `<svg width="${w}" height="${h}" viewBox="0 0 100 80" xmlns="http://www.w3.org/2000/svg" style="opacity:${op}">
+    <g fill="#deaf7f">
+      <ellipse cx="50" cy="38" rx="18" ry="9" transform="rotate(-10,50,38)"/>
+      <ellipse cx="50" cy="36" rx="7" ry="5" transform="rotate(-10,50,36)"/>
+      <path d="M32,40 Q15,25 5,35 Q20,32 32,44 Z"/>
+      <path d="M68,40 Q85,25 95,35 Q80,32 68,44 Z"/>
+      <path d="M44,46 Q38,65 32,72 Q42,60 50,58 Q58,60 68,72 Q62,65 56,46 Z"/>
+      <ellipse cx="43" cy="34" rx="2.5" ry="2" fill="#074454"/>
+      <path d="M40,32 Q38,30 42,31 Z" fill="#074454" opacity="0.7"/>
+    </g>
+  </svg>`;
+}
+
+function render(){
+  const t = T[lang];
+  // nav
+  document.querySelectorAll('.nav-link-item').forEach((el,i)=>el.textContent=t.nav[i]);
+  document.querySelector('.open-pill').textContent=t.open;
+  // hero
+  document.querySelector('.hero-eyebrow').textContent=t.eyebrow;
+  document.querySelector('.h1-main').textContent=t.h1;
+  document.querySelector('.h1-em').textContent=t.h1em;
+  document.querySelector('.hero-sub').textContent=t.sub;
+  document.querySelector('.hero-rating').textContent='4.8 — '+t.ratings;
+  document.querySelector('.btn1').textContent=t.btn1;
+  document.querySelector('.btn2').textContent=t.btn2;
+  // features
+  const fi = document.querySelectorAll('.fi-text');
+  [t.f1,t.f2,t.f3,t.f4].forEach((v,i)=>fi[i]&&(fi[i].textContent=v));
+  // about
+  document.querySelector('.about-label').textContent=t.about_label;
+  document.querySelector('.about-title-main').textContent=t.about_title;
+  document.querySelector('.about-title-em').textContent=t.about_em;
+  document.querySelectorAll('.about-p').forEach((el,i)=>el.textContent=[t.about_p1,t.about_p2][i]);
+  document.querySelectorAll('.badge').forEach((el,i)=>el.textContent=t.badges[i]||el.textContent);
+  document.querySelectorAll('.slbl').forEach((el,i)=>el.textContent=t.stat_lbl[i]||el.textContent);
+  // menu
+  document.querySelector('.menu-label').textContent=t.menu_label;
+  document.querySelector('.menu-title-main').textContent=t.menu_title;
+  document.querySelector('.menu-title-em').textContent=t.menu_em;
+  const mcards = document.querySelectorAll('.mcard');
+  t.dishes.forEach((d,i)=>{
+    if(!mcards[i]) return;
+    mcards[i].querySelector('.mcard-tag').textContent=d.tag;
+    mcards[i].querySelector('.mcard-name').textContent=d.name;
+    mcards[i].querySelector('.mcard-desc').textContent=d.desc;
+    mcards[i].querySelector('.mcard-price').textContent=d.price;
+  });
+  // story
+  document.querySelector('.story-quote').textContent=t.story_q;
+  // reviews
+  document.querySelector('.rev-label').textContent=t.rev_label;
+  document.querySelector('.rev-title-main').textContent=t.rev_title;
+  document.querySelector('.rev-title-em').textContent=t.rev_em;
+  const rcards = document.querySelectorAll('.rcard');
+  t.reviews.forEach((r,i)=>{
+    if(!rcards[i]) return;
+    rcards[i].querySelector('.rcard-text').textContent='"'+r.text+'"';
+    rcards[i].querySelector('.rcard-name').textContent=r.name;
+    rcards[i].querySelector('.rcard-date').textContent=r.date;
+  });
+  // info
+  document.querySelector('.info-addr-lbl').textContent=t.info_addr;
+  document.querySelector('.info-time-lbl').textContent=t.info_time;
+  document.querySelector('.info-contact-lbl').textContent=t.info_contact;
+  document.querySelector('.info-services-lbl').textContent=t.info_services;
+  document.querySelector('.addr-text').innerHTML=t.addr_text;
+  document.querySelector('.time-text').textContent=t.time_text;
+  document.querySelector('.open-now').textContent=t.open_now;
+  document.querySelector('.services-text').innerHTML=t.services;
+  // footer
+  document.querySelector('.foot-text').innerHTML='<span>'+t.foot.split('·')[0].trim()+'</span> · '+t.foot.split('·').slice(1).join('·');
+  // lang buttons
+  document.querySelectorAll('.lang-btn').forEach(b=>{
+    b.classList.toggle('active',b.dataset.lang===lang);
+  });
+}
+</script>
+
+<!-- LANG BAR -->
+<div class="lang-bar">
+  <button class="lang-btn active" data-lang="uz" onclick="lang='uz';render()">UZ</button>
+  <button class="lang-btn" data-lang="ru" onclick="lang='ru';render()">RU</button>
+  <button class="lang-btn" data-lang="en" onclick="lang='en';render()">EN</button>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <div class="nav-bird" id="nav-bird"></div>
+    <div class="nav-logo-text">Qaldirg'och</div>
+  </div>
+  <div class="nav-links">
+    <a href="#about" class="nav-link-item">Biz haqimizda</a>
+    <a href="#menu" class="nav-link-item">Menyu</a>
+    <a href="#reviews" class="nav-link-item">Sharhlar</a>
+    <a href="#info" class="nav-link-item">Aloqa</a>
+  </div>
+  <div class="open-pill">24/7 Ochiq</div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="teal-blob"></div>
+  <div class="teal-blob2"></div>
+  <div class="hero-content">
+    <div class="hero-bird" id="hero-bird"></div>
+    <p class="hero-eyebrow">Toshkent — Ko'kcha Darvoza ko'chasi, 349A</p>
+    <h1 class="hero-title"><span class="h1-main">Milliy ta'm,</span><br><em class="h1-em">qalbga yaqin</em></h1>
+    <p class="hero-sub">Oilaviy an'analar va zamonaviy qulay muhit — Qaldirg'och oilaviy restoran</p>
+    <div class="hero-stars">
+      <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+      <span class="hero-rating">4.8 — 269 ta baho</span>
+    </div>
+    <div class="hero-cta">
+      <a href="#menu" class="btn-primary btn1">Menyuni ko'rish</a>
+      <a href="tel:+998781136963" class="btn-outline btn2">Qo'ng'iroq</a>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<div class="features-bar">
+  <div class="feature-item">🕐 <span class="fi-text">24 soat ochiq</span></div>
+  <div class="feature-item">🚚 <span class="fi-text">Yetkazib berish</span></div>
+  <div class="feature-item">🎠 <span class="fi-text">O'yin maydoni</span></div>
+  <div class="feature-item">✨ <span class="fi-text">Oilaviy muhit</span></div>
+</div>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="about-inner">
+    <div class="about-visual">
+      <div class="big-card">
+        <div class="big-card-bird" id="big-card-bird"></div>
+        <div class="big-num">4.8</div>
+        <div class="big-lbl">Yandex Maps reytingi</div>
+        <div class="stat-row">
+          <div class="sbox"><div class="sval">269</div><div class="slbl">Baho</div></div>
+          <div class="sbox"><div class="sval">78</div><div class="slbl">Sharh</div></div>
+          <div class="sbox"><div class="sval">24/7</div><div class="slbl">Ochiq</div></div>
+          <div class="sbox"><div class="sval">100+</div><div class="slbl">Taom</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="about-text">
+      <p class="section-label about-label">Biz haqimizda</p>
+      <h2 class="section-title"><span class="about-title-main">Uy iliqligini </span><em class="about-title-em">his eting</em></h2>
+      <div class="divider"></div>
+      <p class="about-p">Qaldirg'och — bu faqat restoran emas. Bu milliy mazzali taomlar, mehribon xizmat va bolalar uchun bepul o'yin maydoni bor, qulay oilaviy muhit.</p>
+      <p class="about-p">Toshkentning markazida joylashgan bo'lib, kechasi ham, kunduz ham eshiklarimiz sizga ochiq.</p>
+      <div class="badge-row">
+        <span class="badge">Milliy taomlar</span>
+        <span class="badge">Evropa taomlari</span>
+        <span class="badge">Yetkazib berish</span>
+        <span class="badge">Oilaviy muhit</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MENU -->
+<section class="menu-sec" id="menu">
+  <div class="menu-hdr">
+    <p class="section-label menu-label">Menyumiz</p>
+    <h2 class="section-title"><span class="menu-title-main">Mashhur </span><em class="menu-title-em">taomlar</em></h2>
+    <div class="divider"></div>
+  </div>
+  <div class="menu-grid">
+    <div class="mcard"><div class="bird-watermark" id="bw0"></div><div class="mcard-tag">Asosiy taom</div><span class="mcard-icon">🍜</span><div class="mcard-name">Qovurilgan lag'mon</div><p class="mcard-desc">Mol go'shti va sabzavotli lag'mon — qo'ng'ir qalampir, pomidor, selderey.</p><div class="mcard-price">65 000 so'm</div></div>
+    <div class="mcard"><div class="bird-watermark" id="bw1"></div><div class="mcard-tag">Asosiy taom</div><span class="mcard-icon">🥘</span><div class="mcard-name">Uyg'ur lag'moni</div><p class="mcard-desc">Mol go'shti va sabzavotli uyg'ur lag'moni — qo'ng'ir qalampir, selderey.</p><div class="mcard-price">62 000 so'm</div></div>
+    <div class="mcard"><div class="bird-watermark" id="bw2"></div><div class="mcard-tag">Birinchi taom</div><span class="mcard-icon">🍲</span><div class="mcard-name">Mastava</div><p class="mcard-desc">Mol va qo'y go'shtli qalin mastava — piyoz, sabzi, pomidor va ko'kat bilan.</p><div class="mcard-price">45 000 so'm</div></div>
+    <div class="mcard"><div class="bird-watermark" id="bw3"></div><div class="mcard-tag">Milliy taom</div><span class="mcard-icon">🍚</span><div class="mcard-name">Samarqand zig'ir oshi</div><p class="mcard-desc">Mol go'shti, sabzi va kunjut moyi bilan pishirilgan osh. Yaxshi bug'langan.</p><div class="mcard-price">62 000 so'm</div></div>
+    <div class="mcard"><div class="bird-watermark" id="bw4"></div><div class="mcard-tag">Salat</div><span class="mcard-icon">🥗</span><div class="mcard-name">Achachuk</div><p class="mcard-desc">Yangi pomidor va piyozdan tayyorlangan yengil, xushbo'y salat.</p><div class="mcard-price">20 000 so'm</div></div>
+    <div class="mcard"><div class="bird-watermark" id="bw5"></div><div class="mcard-tag">Milliy taom</div><span class="mcard-icon">🥩</span><div class="mcard-name">Naryn</div><p class="mcard-desc">An'anaviy naryn — xushbo'y piyoz bilan. To'yimli va maroqli ta'm.</p><div class="mcard-price">57 000 so'm</div></div>
+  </div>
+</section>
+
+<!-- STORY / QUOTE SECTION -->
+<div class="story">
+  <div class="story-bird-bg" id="story-bird-bg"></div>
+  <div class="story-inner">
+    <p class="story-quote">"Qaldirg'och qanday erkin uchsa — bizning taomlar ham shunday erkin, tabiiy va iliq"</p>
+    <div class="story-birds-row" id="story-birds-row"></div>
+  </div>
+</div>
+
+<!-- REVIEWS -->
+<section class="reviews" id="reviews">
+  <div class="rev-hdr">
+    <p class="section-label rev-label">Mehmonlar fikri</p>
+    <h2 class="section-title"><span class="rev-title-main">Ular nima </span><em class="rev-title-em">deydi?</em></h2>
+    <div class="divider"></div>
+  </div>
+  <div class="rev-grid">
+    <div class="rcard"><div class="rcard-bird" id="rb0"></div><div class="rcard-stars">★★★★★</div><p class="rcard-text">"Mazali milliy va Evropa taomlari. Samimiy xodimlar, uy kabi toza. 7/24 ochiq."</p><div class="rcard-author"><div class="rcard-av">СО</div><div><div class="rcard-name">Sardor Omon</div><div class="rcard-date">Yanvar 2025</div></div></div></div>
+    <div class="rcard"><div class="rcard-bird" id="rb1"></div><div class="rcard-stars">★★★★★</div><p class="rcard-text">"Kabobi juda yoqdi — yangi va yumshoq. Xodimlar jilmayib tez xizmat ko'rsatdi."</p><div class="rcard-author"><div class="rcard-av">SA</div><div><div class="rcard-name">Saidjon Abduvaliev</div><div class="rcard-date">Noyabr 2025</div></div></div></div>
+    <div class="rcard"><div class="rcard-bird" id="rb2"></div><div class="rcard-stars">★★★★★</div><p class="rcard-text">"Sigir bo'yni, milliy shashlik va burger yedik — hammasi zo'r. Narxlar ham yaxshi."</p><div class="rcard-author"><div class="rcard-av">BS</div><div><div class="rcard-name">Behruz Samadov</div><div class="rcard-date">Yanvar 2025</div></div></div></div>
+  </div>
+</section>
+
+<!-- INFO -->
+<section class="info-sec" id="info">
+  <div class="info-inner">
+    <div class="iblock">
+      <h3 class="info-addr-lbl">Manzil</h3>
+      <p class="addr-text">Toshkent shahar,<br>Ko'kcha Darvoza ko'chasi, 349A</p>
+      <p style="margin-top:0.5rem;font-size:0.75rem;color:var(--text-dim)">Ko'kcha masjidi — 165 m</p>
+    </div>
+    <div class="iblock">
+      <h3 class="info-time-lbl">Ish vaqti</h3>
+      <p class="time-text">Har kuni, to'xtovsiz</p>
+      <div class="green-pill open-now">HOZIR OCHIQ</div>
+    </div>
+    <div class="iblock">
+      <h3 class="info-contact-lbl">Bog'lanish</h3>
+      <a href="tel:+998781136963">+998 78 113 69 63</a>
+      <a href="tel:+998956773000" style="display:block;margin-top:0.4rem">+998 95 677 30 00</a>
+    </div>
+    <div class="iblock">
+      <h3 class="info-services-lbl">Xizmatlar</h3>
+      <p class="services-text">🚚 Yetkazib berish<br>🛍️ Olib ketish<br>🎠 Bepul o'yin maydoni<br>🅿️ Avtoturargoh</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-bird" id="footer-bird"></div>
+  <p class="foot-text"><span>Qaldirg'och</span> oilaviy restoran · Toshkent · 24/7</p>
+</footer>
+
+<script>
+// Inject SVG birds
+document.getElementById('nav-bird').innerHTML = swallowSVG(32,32,1);
+document.getElementById('hero-bird').innerHTML = swallowSVG(120,96,1);
+document.getElementById('big-card-bird').innerHTML = swallowSVG(200,160,1);
+document.getElementById('story-bird-bg').innerHTML = swallowSVG(600,480,1);
+document.getElementById('footer-bird').innerHTML = swallowSVG(40,32,0.5);
+
+// Story birds row — 5 flying birds in a row
+const row = document.getElementById('story-birds-row');
+for(let i=0;i<5;i++){
+  const d = document.createElement('div');
+  d.innerHTML = swallowSVG(36,28,0.6+i*0.08);
+  d.style.cssText = `animation: floatBird ${1.5+i*0.3}s ease-in-out ${i*0.2}s infinite alternate`;
+  row.appendChild(d);
+}
+
+// Watermarks in menu cards
+for(let i=0;i<6;i++){
+  const el = document.getElementById('bw'+i);
+  if(el) el.innerHTML = swallowSVG(100,80,1);
+}
+
+// Review card birds
+for(let i=0;i<3;i++){
+  const el = document.getElementById('rb'+i);
+  if(el) el.innerHTML = swallowSVG(30,24,1);
+}
+
+// Float animation for story birds
+const styleEl = document.createElement('style');
+styleEl.textContent = '@keyframes floatBird{from{transform:translateY(0) rotate(-5deg)}to{transform:translateY(-8px) rotate(5deg)}}';
+document.head.appendChild(styleEl);
+
+render();
+</script>
